@@ -1,4 +1,4 @@
-package TSim;
+package Solution.TSim;
 
 /** CommandStatus represents the responses from TSim that does not
  *  carry information about sensors or trains but rather if

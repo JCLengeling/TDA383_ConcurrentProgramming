@@ -1,4 +1,4 @@
-package TSim;
+package Solution.TSim;
 
 /** Thrown when a command to TSim fails. This might happen if the 
  *  train affected by the command has collided or derailed or if 

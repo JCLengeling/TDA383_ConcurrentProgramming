@@ -1,4 +1,4 @@
-package TSim;
+package Solution.TSim;
 
 /** Umbrella type for messages from TSim.
  *

@@ -1,4 +1,4 @@
-package TSim;
+package Solution.TSim;
 
 import java.util.ArrayList;
 

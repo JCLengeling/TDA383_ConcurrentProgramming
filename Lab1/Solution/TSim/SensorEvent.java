@@ -1,4 +1,4 @@
-package TSim;
+package Solution.TSim;
 
 /** SensorEvent represents the event of a train passing over a sensor.
  *  Every time a train passes over a sensor first an ACTIVE event is 

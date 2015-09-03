@@ -1,4 +1,4 @@
-package TSim;
+package Solution.TSim;
 
 /** Class representing an (erroneous) event for a train. 
  *

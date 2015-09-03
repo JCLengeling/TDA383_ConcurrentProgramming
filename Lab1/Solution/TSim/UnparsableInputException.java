@@ -1,4 +1,4 @@
-package TSim;
+package Solution.TSim;
 
 public class UnparsableInputException extends Exception
 {            
