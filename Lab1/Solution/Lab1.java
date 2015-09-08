@@ -1,5 +1,6 @@
 import TSim.*;
-import java.util.*;
+import java.util.HashMap; 
+import java.util.Map; 
 
 public class Lab1 {
 	
@@ -14,21 +15,20 @@ public class Lab1 {
   public Lab1(String[] args) {
     TSimInterface tsi = TSimInterface.getInstance();
     
-   
-    sensorLocation.add(1, new Touple(7,8));
-    sensorLocation.add(2, new Touple(8,6));
-    sensorLocation.add(3, new Touple(16,7));
-    sensorLocation.add(4, new Touple(16,8));
-    sensorLocation.add(5, new Touple(15,10));
-    sensorLocation.add(6, new Touple(14,9));
-    sensorLocation.add(7, new Touple(4,10));
-    sensorLocation.add(8, new Touple(5,9));
-    sensorLocation.add(9, new Touple(3,12));
-    sensorLocation.add(10, new Touple(4,11));    
+    sensorLocation.put(1, new Touple(7,8));
+    sensorLocation.put(2, new Touple(8,6));
+    sensorLocation.put(3, new Touple(16,7));
+    sensorLocation.put(4, new Touple(16,8));
+    sensorLocation.put(5, new Touple(15,10));
+    sensorLocation.put(6, new Touple(14,9));
+    sensorLocation.put(7, new Touple(4,10));
+    sensorLocation.put(8, new Touple(5,9));
+    sensorLocation.put(9, new Touple(3,12));
+    sensorLocation.put(10, new Touple(4,11));    
     
     try {
-       first = new Thread(new Train(tsi,1 ,Integer.valueOf(args[0]).intValue()));
-       second = new Thread(new Train(tsi,2,Integer.valueOf(args[1]).intValue()));
+       first = new Thread(new Train(tsi,1 ,Integer.valueOf(args[0]).intValue(), sensorLocation));
+       second = new Thread(new Train(tsi,2,Integer.valueOf(args[1]).intValue(), sensorLocation));
       
     }
     catch (CommandException e) {
@@ -53,11 +53,13 @@ class Touple {
 class Train implements Runnable {
 	private TSimInterface tsi;
 	private int id, speed;
+	HashMap<Integer, Touple> sensorLocation;
 	private boolean inStation = true;
-	public Train(TSimInterface tsi,int id, int speed)throws CommandException {
+	public Train(TSimInterface tsi,int id, int speed, HashMap<Integer, Touple> sensorLocation)throws CommandException {
 		this.tsi = tsi;		
 		this.speed = speed;
 		this.id = id;
+		this.sensorLocation = sensorLocation;
 		 try {
 			 this.tsi.setSpeed(id,speed);
 			 }
@@ -72,31 +74,34 @@ class Train implements Runnable {
 			 SensorEvent event = tsi.getSensor(this.id);
 			 if(this.id == 1) System.err.println(event.toString()); 
 			 
-			 
-			 
-			 
 			 int tmpY = 0, tmpX= 0, status = -1 ;
 			 tmpY = event.getYpos();
 			 tmpX = event.getXpos();
 			 status = event.getStatus();
-			 if(tmpX == 16 ){
+			 
+			 int currentSensor = -1;
+			 
+			 for(Map.Entry<Integer, Touple> entry : sensorLocation.entrySet()) {
+				    
+				    Touple value = entry.getValue();
+				    
+				    if (value.getX() == tmpX && value.getY() == tmpY){
+				    	currentSensor = entry.getKey();
+				    }
+
+				}
+			
+			 
+			if(currentSensor == -1){
+				if(tmpX == 16 ){
 				 if (tmpY == 3 || tmpY ==  5 || tmpY == 11 || tmpY==13 ){
 					 if (status == 2)
 						 inStation = false;
 					 else
 						 inStation = true;
-				 }
-				 
-				 if (tmpY == 7) {
-					 if(status == 2) {Thread.sleep(1000);this.tsi.setSwitch(17,7,1);}
-					 else {
-						 
-						 this.tsi.setSwitch(17,7,2);
-						 }
-				 }
-			 }
-			 
-			 
+				 	}
+				}
+			}		 
 			 
 			 if (inStation ){
 				 this.tsi.setSpeed(this.id, 0);
