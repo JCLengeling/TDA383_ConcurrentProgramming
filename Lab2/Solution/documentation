@@ -1,0 +1,18 @@
+Placement of the sensors - https://github.com/JCLengeling/TDA383_ConcurrentProgramming/blob/master/Lab1/Solution/MapSensors.png
+Critical sections - https://github.com/JCLengeling/TDA383_ConcurrentProgramming/blob/master/Lab1/Solution/MapSemaphors.png
+Max speed - 17
+
+Explanation
+On the second picture we can see the placements of critical sections in our solution. Each color means different critical section. Every section has 1 sensor on each side.
+
+The main idea of our solution is that when train crosses first sensor of given section in its direction, it releases currently locked section and every time it crosses second sensor in given section it tries to acquire following section, otherwise the train waits.
+
+In segments where there is more than one following section, there is one set as default one which every train tries to acquire as the first one. If this acquire fails, the trains acquires second available section.
+
+This solution means that each train can hold only one section at the same time, with the only exception being the crossing in the upper part of the map. When entering this section, the train acquires available track and then follows it untill it encounters next sensor, which means the train has to acquire crossing section in order to proceed. If its not available, the train will wait.
+
+Speed limit
+The speed is limited by placement of the sensors in each section. The limiting factor is the deacceleration of the trail. The further we place sensors from the places where the railroads meet, the faster the trains can go.
+
+Tests
+We were increasing the speed of trains untill the speed of trains caused crash due to limited deacceleration.

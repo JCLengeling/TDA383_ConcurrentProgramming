@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Concurrent Programming Lectures (TDA382/DIT390)">
+    <meta name="author" content="Alejandro Russo">
+
+    <title>TDA383/DIT390</title>
+    <link href="TDA383_DIT390_files/bootstrap.css" rel="stylesheet">
+    <link href="TDA383_DIT390_files/bootstrap-theme.css" rel="stylesheet">
+
+
+    <style>
+      code, pre {
+           white-space: pre-wrap;
+           white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+           white-space: -pre-wrap;      /* Opera 4-6 */
+           white-space: -o-pre-wrap;    /* Opera 7 */
+           word-wrap: break-word;
+      }
+      body {padding-top: 60px;}
+      mark {background-color:#666633;}
+      li.L0, li.L1, li.L2, li.L3,
+      li.L5, li.L6, li.L7, li.L8
+      { list-style-type: decimal !important }
+
+      .cremona { font-family: arial; font-size: 15; font-style: bold;
+      background-color:LightGreen; }
+      .state { font-family: arial; font-size: 15; font-style: bold; background-color:MediumTurquoise; }
+      .navbar-inverse { -webkit-box-shadow: 0 0 10px #333; -moz-box-shadow: 0 0 10px #333; box-shadow: 0 0 10px #333; }
+    </style>
+
+    <!-- <style type="text/css"> -->
+    <!-- h2   {font-size: 33px ;} -->
+    <!-- h3   {font-size: 27px ;} -->
+    <!-- <\!-- p    {font-size: 30px ;} -\-> -->
+    <!-- p    {font-size: 20px ;} -->
+    <!-- li   {font-size: 20px ;} -->
+    <!-- pre  {font-size: 20px ;} -->
+    <!-- prettyprint {font-size: 15px ;} -->
+    <!-- th   {font-size: 20px ;} -->
+    <!-- .imgright { float: right; } -->
+    <!-- td   {font-size: 20px ;} -->
+    <!-- </style> -->
+
+<!-- ---------------- OLD Alejandro's original style ------------------ -->
+    <!-- <style> -->
+    <!--   code, pre { -->
+    <!--        white-space: pre-wrap; -->
+    <!--        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */ -->
+    <!--        white-space: -pre-wrap;      /* Opera 4-6 */ -->
+    <!--        white-space: -o-pre-wrap;    /* Opera 7 */ -->
+    <!--        word-wrap: break-word; -->
+    <!--   } -->
+    <!--   body {padding-top: 60px;} -->
+    <!--   mark {background-color:#666633;} -->
+    <!--   li.L0, li.L1, li.L2, li.L3, -->
+    <!--   li.L5, li.L6, li.L7, li.L8 -->
+    <!--   { list-style-type: decimal !important } -->
+
+    <!--   .cremona { font-family: arial; font-size: 40; font-style: bold; -->
+    <!--   background-color:LightGreen; }  -->
+    <!--   .state { font-family: arial; font-size: 35; font-style: bold; background-color:MediumTurquoise; }  -->
+    <!-- </style> -->
+ 
+    <!-- <style type="text/css"> -->
+    <!-- <\!-- h2   {font-size: 43px ;} -\-> -->
+    <!-- <\!-- h3   {font-size: 37px ;} -\-> -->
+    <!-- <\!-- p    {font-size: 30px ;} -\-> -->
+    <!-- <\!-- li   {font-size: 25px ;} -\-> -->
+    <!-- <\!-- pre  {font-size: 25px ;} -\-> -->
+    <!-- <\!-- prettyprint {font-size: 25px ;} -\-> -->
+    <!-- <\!-- th   {font-size: 30px ;} -\-> -->
+    <!-- <\!-- .imgright { float: right; } -\-> -->
+    <!-- <\!-- td   {font-size: 30px ;} -\-> -->
+    <!-- </style> -->
+
+<!-- ---------------- OLD Alejandro's original style ------------------ -->
+  <link href="TDA383_DIT390_files/default.html" type="text/css" rel="stylesheet"><link href="TDA383_DIT390_files/prettify.css" type="text/css" rel="stylesheet"></head>
+<body>
+
+
+   <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">TDA383/DIT390</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="http://www.cse.chalmers.se/edu/course/TDA383/index.html">Home/News</a></li>
+            <li class="dropdown">
+              <a href="http://www.cse.chalmers.se/edu/course/TDA383/" class="dropdown-toggle" data-toggle="dropdown">Information<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                    <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/course_inf.html">About the course</a></li>
+                    <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/lit_inf.html">Literature</a></li>
+                    <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/time_inf.html">Time schedule</a></li>
+                    <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/comp_inf.html">Computer issues</a></li>
+                    <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/lang_inf.html">Resources for Java and Erlang</a></li>
+              </ul>
+            </li>
+            <li class="active"><a href="http://www.cse.chalmers.se/edu/course/TDA383/lec.html">Lectures</a></li>
+            <li class="dropdown">
+              <a href="http://www.cse.chalmers.se/edu/course/TDA383/" class="dropdown-toggle" data-toggle="dropdown">Exercises<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                  <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/exercises.html">Overview</a></li>
+                  <li role="presentation" class="divider"></li>
+                  <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/ex1.html">Exercise 1</a></li>
+                  <li><a href="http://www.cse.chalmers.se/edu/year/2013/course/TDA382_Concurrent_Programming_2013-2014_LP1/exercises/solutions/1.zip">Solution</a></li>
+                  <li role="presentation" class="divider"></li>
+                  <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/ex2.html">Exercise 2</a></li>
+                  <li><a href="http://www.cse.chalmers.se/edu/year/2013/course/TDA382_Concurrent_Programming_2013-2014_LP1/exercises/solutions/2.zip">Solution</a></li>
+                  <li role="presentation" class="divider"></li>
+                  <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/ex3.html">Exercise 3</a></li>
+                  <li><a href="http://www.cse.chalmers.se/edu/year/2013/course/TDA382_Concurrent_Programming_2013-2014_LP1/exercises/solutions/3.zip">Solution</a></li>
+              </ul>
+            </li> 
+            <li class="dropdown">
+              <a href="http://www.cse.chalmers.se/edu/course/TDA383/" class="dropdown-toggle" data-toggle="dropdown">Assignments<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                  <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/labs.html">General information</a></li>
+                  <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/lab1.html">Lab 1: Trainspotting</a></li>
+                  <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/lab2.html">Lab 2: Trainspotting II</a></li>
+                  <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/cchat.html">Lab 3: CCHAT</a></li>
+                  <li><a href="http://www.cse.chalmers.se/edu/course/TDA383/dchat.html">Lab 4: DCHAT</a></li>
+              </ul>
+            </li>
+            <li class="active"><a href="http://www.cse.chalmers.se/edu/course/TDA383/exams.html">Exams</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+
+  <div class="container"><h2 id="deadlines"><a class="header-link" href="#deadlines"></a>Deadlines</h2>
+<div class="alert alert-info"> First submission deadline: 20th of September </div>
+
+<div class="alert alert-danger"> Final submission deadline: 4th of October </div>
+
+<h2 id="lab-2"><a class="header-link" href="#lab-2"></a>Lab 2</h2>
+<p>In this assignment, you will implement a variation of the program to control the
+two trains that uses monitors rather than semaphores.</p>
+<div style="padding: 8px" align="center">
+<img src="TDA383_DIT390_files/map.gif" class="img-thumbnail">
+</div>
+
+<h3 id="choice-of-programming-language"><a class="header-link" href="#choice-of-programming-language"></a>Choice of programming language</h3>
+<p>In this assignment you must use Java.</p>
+<hr>
+<h3 id="assignment"><a class="header-link" href="#assignment"></a>Assignment</h3>
+<p>Your assignment is to adapt the program that controls the trains from the
+<a href="http://www.cse.chalmers.se/edu/course/TDA383/lab1.html">Lab 1</a> to use monitors instead of semaphores.</p>
+<h3 id="requirements"><a class="header-link" href="#requirements"></a>Requirements</h3>
+<ul class="list">
+<li><p><strong>All the requirements from the first assignment are also demanded here
+except</strong> that now we use monitors instead of semaphores.</p>
+</li>
+<li><p>You should use monitors that have <strong>explicit locks and condition variables</strong>. 
+That is, you must use the <code>java.util.concurrent.locks</code> package from Java 5,
+<em>not</em> <code>synchronized</code> methods, to implement your monitor.  </p>
+</li>
+<li><p>You should not use the <code>tryLock()</code> method of the <code>Lock</code> interface. If you need
+such functionality, you have to implement it yourself in your monitor.</p>
+</li>
+<li><p>Waiting in your monitors should be realised using condition variables. Locks
+should be held locked only for short moments.</p>
+</li>
+</ul>
+<hr>
+<h2 id="tips-and-tricks"><a class="header-link" href="#tips-and-tricks"></a>Tips and Tricks</h2>
+<p>To give you some hints, you should think that each track is represented by a
+monitor. The monitor will have, <em>at least</em> , the following interface:</p>
+<pre style="" class="prettyprint lang-java prettyprinted"><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> enter</span><span class="pun">()</span><span class="pln"> 
+</span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> leave</span><span class="pun">()</span><span class="pln"> </span></pre>
+
+<p>where <code>enter()</code> is called by a train when entering a single track and <code>leave()</code>
+when a train leaves a single or double track.</p>
+<h2 id="submission"><a class="header-link" href="#submission"></a>Submission</h2>
+<p>In your submission, you should clearly explain the following items:</p>
+<ul class="list">
+<li><p>What is the purpose of each method in the monitor?</p>
+</li>
+<li><p>How many conditional variables, if any, are needed in your solution? Justify your answer.</p>
+</li>
+</ul>
+    <br>
+    <hr>
+      <footer>
+	Concurrent Programming 2015 - Chalmers University of Technology &amp; Gothenburg University
+      </footer>
+      <br>
+      <br>
+  </div>
+
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="TDA383_DIT390_files/jquery-1.js"></script>
+    <script src="TDA383_DIT390_files/bootstrap.js"></script>
+
+
+<script>
+var tags =  ;
+for (var i = 0 ; i < tags.length; i++) {
+ $('a[href='+ tags[i] + ']').on('click',function(e){
+   // prevent normal scrolling action
+   e.preventDefault();
+   var target = $(this.hash);
+   target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+      if (target.length) {
+            widow.scrollTo(0, target.offset().top - 60); // <-- our offset
+       return false;
+   }
+ });
+}
+</script>
+
+
+
+</body></html>
