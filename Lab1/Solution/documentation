@@ -1,6 +1,6 @@
 Placement of the sensors - https://github.com/JCLengeling/TDA383_ConcurrentProgramming/blob/master/Lab1/Solution/MapSensors.png
 Critical sections - https://github.com/JCLengeling/TDA383_ConcurrentProgramming/blob/master/Lab1/Solution/MapSemaphors.png
-Max speed - 17
+Max speed - 15
 
 Explanation
 On the second picture we can see the placements of critical sections in our solution. Each color means different critical section. Every section has 1 sensor on each side.
