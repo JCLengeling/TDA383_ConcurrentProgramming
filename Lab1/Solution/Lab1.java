@@ -22,22 +22,22 @@ public class Lab1 {
         //For easy lookup store sensor locations in the sensorLocation HashMap
         //The SensorID (see lab handin) is used as key and we created a Tuple class to store the X and Y coordinates
 
-        sensorLocation.put(1, new Touple(8, 5));
-        sensorLocation.put(2, new Touple(6, 7));
-        sensorLocation.put(3, new Touple(10, 7));
-        sensorLocation.put(4, new Touple(9, 8));
-        sensorLocation.put(5, new Touple(15, 7));
+        sensorLocation.put(1, new Touple(9, 5));
+        sensorLocation.put(2, new Touple(6, 6));
+        sensorLocation.put(3, new Touple(11, 7));
+        sensorLocation.put(4, new Touple(10, 8));
+        sensorLocation.put(5, new Touple(14, 7));
         sensorLocation.put(6, new Touple(15, 8));
-        sensorLocation.put(7, new Touple(19, 7));
-        sensorLocation.put(8, new Touple(17, 9));
-        sensorLocation.put(9, new Touple(13, 9));
+        sensorLocation.put(7, new Touple(19, 8));
+        sensorLocation.put(8, new Touple(18, 9));
+        sensorLocation.put(9, new Touple(12, 9));
         sensorLocation.put(10, new Touple(13, 10));
-        sensorLocation.put(11, new Touple(6, 9));
+        sensorLocation.put(11, new Touple(7, 9));
         sensorLocation.put(12, new Touple(6, 10));
-        sensorLocation.put(13, new Touple(2, 9));
-        sensorLocation.put(14, new Touple(1, 11));
-        sensorLocation.put(15, new Touple(5, 11));
-        sensorLocation.put(16, new Touple(3, 13));
+        sensorLocation.put(13, new Touple(1, 9));
+        sensorLocation.put(14, new Touple(1, 10));
+        sensorLocation.put(15, new Touple(6, 11));
+        sensorLocation.put(16, new Touple(4, 13));
 
         //Create semaphores and store them in the semaphores array
         //See also picture in lab handin; A is stored at index 0, B at index 1 and so on
