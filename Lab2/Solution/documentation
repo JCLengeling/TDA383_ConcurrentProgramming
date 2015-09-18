@@ -1,18 +1,11 @@
-Placement of the sensors - https://github.com/JCLengeling/TDA383_ConcurrentProgramming/blob/master/Lab1/Solution/MapSensors.png
-Critical sections - https://github.com/JCLengeling/TDA383_ConcurrentProgramming/blob/master/Lab1/Solution/MapSemaphors.png
-Max speed - 17
+What is the purpose of each method in the monitor?
 
-Explanation
-On the second picture we can see the placements of critical sections in our solution. Each color means different critical section. Every section has 1 sensor on each side.
+There are a total of 3 methods in the monitor class. We implemented a enter method, a leave method and a tryEnter methode.
 
-The main idea of our solution is that when train crosses first sensor of given section in its direction, it releases currently locked section and every time it crosses second sensor in given section it tries to acquire following section, otherwise the train waits.
+enter: this method does basically what the acquire did for the semaphores. If the section we want to enter is free (isTaken is false),enter the section. If it is currently taken (isTaken is true) wait until we can take it.
+leave: this method does basically what rhe realease did for semaphores. If we leave a section set the isTaken to false and signal all the threads which are waiting.
+tryEnter: has basically same functionality as tryAcquire of the semaphres. Use the tryLock to make sure we do an atomic operation (if multiple threads call tryEnter). Check isTaken and if it's false call the enter method before returning a true and unlocking the trylock.
 
-In segments where there is more than one following section, there is one set as default one which every train tries to acquire as the first one. If this acquire fails, the trains acquires second available section.
+How many conditional variables, if any, are needed in your solution? Justify your answer.
+We are using one condition. We only need one because there can only be one train on a track at one time unit.
 
-This solution means that each train can hold only one section at the same time, with the only exception being the crossing in the upper part of the map. When entering this section, the train acquires available track and then follows it untill it encounters next sensor, which means the train has to acquire crossing section in order to proceed. If its not available, the train will wait.
-
-Speed limit
-The speed is limited by placement of the sensors in each section. The limiting factor is the deacceleration of the trail. The further we place sensors from the places where the railroads meet, the faster the trains can go.
-
-Tests
-We were increasing the speed of trains untill the speed of trains caused crash due to limited deacceleration.
