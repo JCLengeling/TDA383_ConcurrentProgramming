@@ -4,7 +4,7 @@
 
 %% Produce initial state
 initial_state(Nick, GUIName) ->
-    #client_st { gui = GUIName }.
+   #client_st { gui = GUIName, nickname = Nick }.
 
 %% ---------------------------------------------------------------------------
 
@@ -37,8 +37,8 @@ loop(St, {msg_from_GUI, Channel, Msg}) ->
 
 %% Get current nick
 loop(St, whoami) ->
-    % {"nick", St} ;
-    {{error, not_implemented, "Not implemented"}, St} ;
+     {#client_st.nickname, St} ;
+    %{{error, not_implemented, "Not implemented"}, St} ;
 
 %% Change nick
 loop(St, {nick, Nick}) ->
