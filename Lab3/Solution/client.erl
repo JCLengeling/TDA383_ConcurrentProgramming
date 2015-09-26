@@ -37,13 +37,14 @@ loop(St, {msg_from_GUI, Channel, Msg}) ->
 
 %% Get current nick
 loop(St, whoami) ->
-     {#client_st.nickname, St} ;
+
+    {St#client_st.nickname, St} ;
     %{{error, not_implemented, "Not implemented"}, St} ;
 
 %% Change nick
 loop(St, {nick, Nick}) ->
-    % {ok, St} ;
-    {{error, not_implemented, "Not implemented"}, St} ;
+     {St#client_st{nickname = Nick}, St} ;
+    %{{error, not_implemented, "Not implemented"}, St} ;
 
 %% Incoming message
 loop(St = #client_st { gui = GUIName }, {incoming_msg, Channel, Name, Msg}) ->
