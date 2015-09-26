@@ -1,10 +1,13 @@
 -module(client).
--export([loop/2, initial_state/2]).
+-export([loop/2, create_state/3, initial_state/2]).
 -include_lib("./defs.hrl").
 
 %% Produce initial state
 initial_state(Nick, GUIName) ->
-   #client_st { gui = GUIName, nickname = Nick }.
+   #client_st { gui = GUIName, nickname = Nick, connected = false }.
+
+create_state(Nick, GUIName, Connected) ->
+   #client_st { gui = GUIName, nickname = Nick, connected = Connected }.
 
 %% ---------------------------------------------------------------------------
 
@@ -37,14 +40,18 @@ loop(St, {msg_from_GUI, Channel, Msg}) ->
 
 %% Get current nick
 loop(St, whoami) ->
-
     {St#client_st.nickname, St} ;
-    %{{error, not_implemented, "Not implemented"}, St} ;
 
 %% Change nick
 loop(St, {nick, Nick}) ->
-     {St#client_st{nickname = Nick}, St} ;
-    %{{error, not_implemented, "Not implemented"}, St} ;
+ if
+	St#client_st.connected == true ->
+		{{error, user_already_connected, "We are already connected, we can't change username when we are connected"}, St} ;
+	true -> 
+		{ok, Stnew = create_state(Nick, St#client_st.gui, St#client_st.connected)} 
+ end;
+
+ 
 
 %% Incoming message
 loop(St = #client_st { gui = GUIName }, {incoming_msg, Channel, Name, Msg}) ->
