@@ -16,12 +16,40 @@ create_state(Nick, GUIName, Connected) ->
 %% Connect to server
 loop(St, {connect, Server}) ->
     % {ok, St} ;
-    {{error, not_implemented, "Not implemented"}, St} ;
+    %{{error, not_implemented, "Not implemented"}, St} ;
+
+    %Ref = make_ref(),
+    %list_to_atom(Server) ! {print, self(), Ref},
+    %{ok, St};
+
+    case  St#client_st.connected  of
+    true ->
+        {{error, user_already_connected, "You are already connected to a server."}, St};
+    false->
+        Ref = make_ref(),
+        list_to_atom(Server) ! {connect, self(), Ref, St#client_st.nickname},
+        receive
+            {result, Ref, Result} ->
+                io:write(Result),
+                case Result == ok of
+                    true ->
+                        {ok, St};
+                    false ->
+                        case Result == username_already_connected of
+                            true ->
+                               {{error, user_already_connected, "Username is already taken on server."}, St};
+                            false ->
+                               {{error, server_not_reached, "Server is not available right now."}, St}
+                        end
+                end
+            end
+    end;
+
 
 %% Disconnect from server
 loop(St, disconnect) ->
     % {ok, St} ;
-    {{error, not_implemented, "Not implemented"}, St} ;
+     {{error, not_implemented, "Not implemented"}, St} ;
 
 % Join channel
 loop(St, {join, Channel}) ->
@@ -44,11 +72,9 @@ loop(St, whoami) ->
 
 %% Change nick
 loop(St, {nick, Nick}) ->
- if
-	St#client_st.connected == true ->
+ if	St#client_st.connected == true ->
 		{{error, user_already_connected, "We are already connected, we can't change username when we are connected"}, St} ;
-	true -> 
-		{ok, Stnew = create_state(Nick, St#client_st.gui, St#client_st.connected)} 
+	true ->		{ok, Stnew = create_state(Nick, St#client_st.gui, St#client_st.connected)}
  end;
 
  
