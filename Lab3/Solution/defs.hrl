@@ -9,4 +9,4 @@
 % Add whatever other fields you need.
 -record(server_st, {list_userNames, serverName }).
 
--record(dataTranmission,{nickname}).
+-record(dataTransmission,{nickname}).

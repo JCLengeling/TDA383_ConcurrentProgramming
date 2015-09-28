@@ -12,14 +12,17 @@ create_state(ServerName, List_userNames) ->
 %% ---------------------------------------------------------------------------
 
 loop(St, Message) ->		
-	case  list_contain(St#server_st.list_userNames ,UserName) of
+	case  list_contain(St#server_st.list_userNames ,Message#dataTransmission.nickname) of
               true ->
                   Response = username_already_connected,
 		  {Response, St};
               false ->
-                  list_add(St#server_st.list_userNames ,UserName),
+		  io:fwrite("The List Before: ~p~n", [St#server_st.list_userNames]),
+                  NewList = list_add(St#server_st.list_userNames ,Message#dataTransmission.nickname),
+		  Stnew =  create_state(St#server_st.serverName, NewList),
+		  io:fwrite("The List After: ~p~n", [Stnew#server_st.list_userNames]),
                   Response =  ok,
-		  {Response, St}
+		  {Response, Stnew}
         end.
 
 list_contain([X|_],X) -> true;

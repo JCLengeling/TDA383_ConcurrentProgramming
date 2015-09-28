@@ -27,8 +27,8 @@ loop(St, {connect, Server}) ->
         {{error, user_already_connected, "You are already connected to a server."}, St};
     false->
         Ref = make_ref(),
-        %list_to_atom(Server) ! {connect, self(), Ref, #dataTranmission{nickname = St#client_st.nickname}},
-	Result = genserver:request(list_to_atom(Server), #dataTranmission{nickname = St#client_st.nickname}) ,       
+        Result = genserver:request(list_to_atom(Server), #dataTransmission{nickname = St#client_st.nickname}) ,      
+	io:fwrite("Client is receiving: ~p~n", [Result]), 
 	case Result == ok of
              true ->
                      {ok, St};
