@@ -27,22 +27,19 @@ loop(St, {connect, Server}) ->
         {{error, user_already_connected, "You are already connected to a server."}, St};
     false->
         Ref = make_ref(),
-        list_to_atom(Server) ! {connect, self(), Ref, St#client_st.nickname},
-        receive
-            {result, Ref, Result} ->
-                io:write(Result),
-                case Result == ok of
-                    true ->
-                        {ok, St};
-                    false ->
-                        case Result == username_already_connected of
+        %list_to_atom(Server) ! {connect, self(), Ref, #dataTranmission{nickname = St#client_st.nickname}},
+	Result = genserver:request(list_to_atom(Server), #dataTranmission{nickname = St#client_st.nickname}) ,       
+	case Result == ok of
+             true ->
+                     {ok, St};
+             false ->
+                     case Result == username_already_connected of
                             true ->
                                {{error, user_already_connected, "Username is already taken on server."}, St};
                             false ->
                                {{error, server_not_reached, "Server is not available right now."}, St}
                         end
                 end
-            end
     end;
 
 

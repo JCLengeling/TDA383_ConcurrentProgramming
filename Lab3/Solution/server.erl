@@ -11,25 +11,16 @@ create_state(ServerName, List_userNames) ->
 
 %% ---------------------------------------------------------------------------
 
-loop(St, Message) ->
-    receive
-        stop -> true ;
-
-        {print, From, Ref}->
-            io:write("hi");
-
-        {connnect, From, Ref, UserName} ->
-            case  list_contain(St#server_st.list_userNames ,UserName) of
+loop(St, Message) ->		
+	case  list_contain(St#server_st.list_userNames ,UserName) of
               true ->
-                  From ! {result, Ref, username_already_connected };
-                  %loop(St,Message)
+                  Response = username_already_connected,
+		  {Response, St};
               false ->
                   list_add(St#server_st.list_userNames ,UserName),
-                  From ! {result, Ref, ok}
-                  %loop(St,Message)
-            end
-    end.
-    %{ok, St}.
+                  Response =  ok,
+		  {Response, St}
+        end.
 
 list_contain([X|_],X) -> true;
 list_contain([_|Y],X) -> list_contain(Y,X);
