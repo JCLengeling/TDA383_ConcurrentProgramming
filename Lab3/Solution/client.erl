@@ -106,7 +106,7 @@ loop(St, {msg_from_GUI, Channel, Msg}) ->
     false ->
       {{error, user_not_joined, "You are not member of this channel"}, St};
     true ->
-      genserver:requestAsync(list_to_atom(Channel), #data_trsmn{type = 3, data = [Msg, Channel, St#client_st.nickname]}),
+      Result = genserver:request(list_to_atom(Channel), #data_trsmn{type = 3, data = [Msg, Channel, St#client_st.nickname]}),
       {ok, St}
   end;
 

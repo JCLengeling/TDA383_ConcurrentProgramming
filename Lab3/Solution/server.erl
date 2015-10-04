@@ -74,6 +74,9 @@ channelLoop(St, Message) ->
       {Response, Stnew};
     3 ->
       [Msg, Channel, Nick] = Message#data_trsmn.data,
+      %io:fwrite("~nChannel: ~p~n", [Channel]),
+      %io:fwrite("From: ~p~n", [Nick]),
+      %io:fwrite("Channellist: ~p~n", [St#channel_st.list_userNames]),
       sendAll(St#channel_st.list_userNames, Msg, Channel, Nick),
       Response = ok,
       {Response, St}
@@ -82,6 +85,8 @@ channelLoop(St, Message) ->
 
 sendAll([X | XS], Msg, Channel, Nick) ->
   {_, Pid} = X,
+  %io:fwrite("~nChannel: ~p~n", [Channel]),
+  %io:fwrite("Pid: ~p~n", [Pid]),
   genserver:requestAsync(Pid, {incoming_msg, Channel, Nick, Msg}),
   sendAll(XS, Msg, Channel, Nick);
 sendAll([], _, _, _) -> true.
