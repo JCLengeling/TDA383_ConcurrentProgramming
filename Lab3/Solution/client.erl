@@ -19,25 +19,17 @@ loop(St, {connect, Server}) ->
     false ->
       {{error, user_already_connected, "You are already connected to a server."}, St};
     true ->
-      case whereis(list_to_atom(Server)) == undefined of
-        true ->
-          {{error, server_not_reached, "Server is not available right now."}, St};
-        false ->
-          Result = genserver:request(list_to_atom(Server), #data_trsmn{type = 0, data = [St#client_st.nickname]}),
-          case Result == ok of
-            true ->
-              Stnew = create_state(St#client_st.nickname, St#client_st.gui, Server, St#client_st.list_chatRoom),
-              {ok, Stnew};
-            false ->
-              case Result == username_already_connected of
-                true ->
-                  {{error, user_already_connected, "Username is already taken on server."}, St};
-                false ->
-                  {{error, server_not_reached, "Server is not available right now."}, St}
-              end
-          end
+      case catch(  genserver:request(list_to_atom(Server), #data_trsmn{type = 0, data = [St#client_st.nickname]})) of
+          ok ->
+                Stnew = create_state(St#client_st.nickname, St#client_st.gui, Server, St#client_st.list_chatRoom),
+                {ok, Stnew};
+        username_already_connected ->
+                {{error, user_already_connected, "Username is already taken on server."}, St};
+        {'EXIT', Reason} ->
+                {{error, server_not_reached, "Server is not available right now."}, St}
       end
   end;
+
 
 
 %% Disconnect from server

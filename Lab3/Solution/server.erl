@@ -77,18 +77,27 @@ channelLoop(St, Message) ->
       %io:fwrite("~nChannel: ~p~n", [Channel]),
       %io:fwrite("From: ~p~n", [Nick]),
       %io:fwrite("Channellist: ~p~n", [St#channel_st.list_userNames]),
-      sendAll(St#channel_st.list_userNames, Msg, Channel, Nick),
+      spawn(fun() ->
+        sendAll(St#channel_st.list_userNames, Msg, Channel, Nick)
+        end),
       Response = ok,
       {Response, St}
   end.
 
 
 sendAll([X | XS], Msg, Channel, Nick) ->
-  {_, Pid} = X,
-  %io:fwrite("~nChannel: ~p~n", [Channel]),
-  %io:fwrite("Pid: ~p~n", [Pid]),
-  genserver:requestAsync(Pid, {incoming_msg, Channel, Nick, Msg}),
-  sendAll(XS, Msg, Channel, Nick);
+  {TableName, Pid} = X,
+  case TableName == Nick of
+    true ->
+      sendAll(XS, Msg, Channel, Nick);
+    false ->
+      %io:fwrite("~nChannel: ~p~n", [Channel]),
+      %io:fwrite("Pid: ~p~n", [Pid]),
+      spawn(fun() ->
+          genserver:requestAsync(Pid, {incoming_msg, Channel, Nick, Msg})
+      end),
+          sendAll(XS, Msg, Channel, Nick)
+  end;
 sendAll([], _, _, _) -> true.
 
 
