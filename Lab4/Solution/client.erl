@@ -11,7 +11,7 @@ create_state(Nick, GUIName, ServerName, List_chatRoom) ->
 
 %% ---------------------------------------------------------------------------
 
-%% loop handles each kind of request from GUI
+%% loop handles each kind of request from GUI+
 
 %% Connect to server
 loop(St, {connect, Server}) ->
@@ -20,13 +20,30 @@ loop(St, {connect, Server}) ->
       {{error, user_already_connected, "You are already connected to a server."}, St};
     true ->
       case catch(  genserver:request(list_to_atom(Server), #data_trsmn{type = 0, data = [St#client_st.nickname]})) of
-          ok ->
-                Stnew = create_state(St#client_st.nickname, St#client_st.gui, Server, St#client_st.list_chatRoom),
-                {ok, Stnew};
+        ok ->
+          Stnew = create_state(St#client_st.nickname, St#client_st.gui, Server, St#client_st.list_chatRoom),
+          {ok, Stnew};
         username_already_connected ->
-                {{error, user_already_connected, "Username is already taken on server."}, St};
+          {{error, user_already_connected, "Username is already taken on server."}, St};
         {'EXIT', Reason} ->
-                {{error, server_not_reached, "Server is not available right now."}, St}
+          {{error, server_not_reached, "Server is not available right now."}, St}
+      end
+  end;
+
+%% Connect to Remote server
+loop(St, {connect, {Server,Machine}}) ->
+  case St#client_st.serverName == "" of
+    false ->
+      {{error, user_already_connected, "You are already connected to a server."}, St};
+    true ->
+      case catch(  genserver:request(list_to_atom({Server,Machine}), #data_trsmn{type = 0, data = [St#client_st.nickname]})) of
+        ok ->
+          Stnew = create_state(St#client_st.nickname, St#client_st.gui, Server, St#client_st.list_chatRoom),
+          {ok, Stnew};
+        username_already_connected ->
+          {{error, user_already_connected, "Username is already taken on server."}, St};
+        {'EXIT', Reason} ->
+          {{error, server_not_reached, "Server is not available right now."}, St}
       end
   end;
 
