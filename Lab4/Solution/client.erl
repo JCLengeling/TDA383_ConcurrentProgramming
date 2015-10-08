@@ -15,11 +15,12 @@ create_state(Nick, GUIName, ServerName, MachineName, List_chatRoom) ->
 
 %% Connect to Remote server
 loop(St, {connect, {Server,Machine}}) ->
-  case [St#client_st.serverName] == "" of
+  %io:fwrite("~nChannel: ~p~n", ["Here"]),
+  case St#client_st.serverName == "" of
     false ->
       {{error, user_already_connected, "You are already connected to a server."}, St};
     true ->
-      case catch(  genserver:request({list_to_atom(Server),list_to_atom(Machine)}, #data_trsmn{type = 0, data = [St#client_st.nickname]})) of
+      case catch(  genserver:request({list_to_atom(Server), list_to_atom(Machine)}, #data_trsmn{type = 0, data = [St#client_st.nickname]})) of
         ok ->
           Stnew = create_state(St#client_st.nickname, St#client_st.gui, Server, Machine, St#client_st.list_chatRoom),
           {ok, Stnew};
@@ -149,7 +150,7 @@ loop(St, {leave, Channel}) ->
          				Stnew = create_state(St#client_st.nickname, St#client_st.gui, St#client_st.serverName, St#client_st.machineName,  NewList),
           				{ok, Stnew}
       			end
-			
+	end
   end;
 
 % Sending messages
